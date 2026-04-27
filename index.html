@@ -360,19 +360,39 @@
     </div>
 
     <script>
+        // Вбудовані дані пожежних навантажень (ДСТУ 8828:2019, дані Кошмарова)
+        const FIRE_LOADS_STATIC = [
+            {id:1,  name:"Будівлі І-ІІ ст. вогнестійкості; меблі+побутові вироби", q_low:13800, v_spread:0.0108, psi_ud:0.0145, smoke_capacity:270,   o2_consumption:-1.03,  co2_emission:0.203,   co_emission:0.0022, hcl_emission:0.014},
+            {id:2,  name:"Будівлі І-ІІ ст. вогнестійкості; меблі+тканини",         q_low:14700, v_spread:0.0108, psi_ud:0.0145, smoke_capacity:82,    o2_consumption:-1.437, co2_emission:1.285,   co_emission:0.0022, hcl_emission:0.006},
+            {id:3,  name:"Адмін. приміщення; меблі+папір",                          q_low:14002, v_spread:0.022,  psi_ud:0.021,  smoke_capacity:53,    o2_consumption:-1.161, co2_emission:1.434,   co_emission:0.043,  hcl_emission:0.0},
+            {id:4,  name:"Бібліотеки, архіви; книги на стелажах",                   q_low:14500, v_spread:0.0103, psi_ud:0.011,  smoke_capacity:49.5,  o2_consumption:-1.154, co2_emission:1.1087,  co_emission:0.0974, hcl_emission:0.0},
+            {id:5,  name:"Бензин А-76",                                              q_low:43200, v_spread:745,    psi_ud:0.0585, smoke_capacity:256,   o2_consumption:-3.405, co2_emission:2.92,    co_emission:0.175,  hcl_emission:0.0},
+            {id:6,  name:"Гас (Керосин)",                                            q_low:43300, v_spread:794,    psi_ud:0.0415, smoke_capacity:438.1, o2_consumption:-3.341, co2_emission:2.92,    co_emission:0.148,  hcl_emission:0.0},
+            {id:7,  name:"Дизельне паливо; солярка",                                 q_low:45400, v_spread:853,    psi_ud:0.0425, smoke_capacity:620.1, o2_consumption:-3.368, co2_emission:3.163,   co_emission:0.122,  hcl_emission:0.0},
+            {id:8,  name:"Ацетон",                                                   q_low:29000, v_spread:790,    psi_ud:0.044,  smoke_capacity:80,    o2_consumption:-2.22,  co2_emission:2.293,   co_emission:0.269,  hcl_emission:0.0},
+            {id:9,  name:"Етиловий спирт",                                           q_low:27500, v_spread:789.3,  psi_ud:0.031,  smoke_capacity:80,    o2_consumption:-2.362, co2_emission:1.937,   co_emission:0.269,  hcl_emission:0.0},
+            {id:10, name:"Електрокабель АВВГ",                                       q_low:25000, v_spread:0.0071, psi_ud:0.0244, smoke_capacity:635,   o2_consumption:-2.19,  co2_emission:0.398,   co_emission:0.109,  hcl_emission:0.0245},
+            {id:11, name:"Кабельний підвал; кабелі АВВГ+АПВГ",                       q_low:30700, v_spread:0.0071, psi_ud:0.0244, smoke_capacity:521,   o2_consumption:-2.19,  co2_emission:0.65,    co_emission:0.1295, hcl_emission:0.0202},
+            {id:12, name:"Склад бавовни у тюках",                                    q_low:16700, v_spread:0.0042, psi_ud:0.0167, smoke_capacity:0.6,   o2_consumption:-1.15,  co2_emission:0.578,   co_emission:0.0052, hcl_emission:0.0},
+            {id:13, name:"Склад оргскла (ПММА)",                                     q_low:26400, v_spread:0.008,  psi_ud:0.0041, smoke_capacity:78,    o2_consumption:-2.09,  co2_emission:1.795,   co_emission:0.1266, hcl_emission:0.0},
+            {id:14, name:"Штабель деревини; хвойний ліс",                            q_low:13800, v_spread:0.0585, psi_ud:0.0145, smoke_capacity:57,    o2_consumption:-1.15,  co2_emission:1.57,    co_emission:0.024,  hcl_emission:0.0},
+            {id:15, name:"Гумотехнічні вироби",                                      q_low:36000, v_spread:0.0184, psi_ud:0.0112, smoke_capacity:850,   o2_consumption:-2.99,  co2_emission:0.416,   co_emission:0.015,  hcl_emission:0.0},
+            {id:16, name:"Лінолеум ПВХ",                                             q_low:14000, v_spread:0.015,  psi_ud:0.0137, smoke_capacity:47.7,  o2_consumption:-1.369, co2_emission:1.478,   co_emission:0.03,   hcl_emission:0.0058},
+            {id:17, name:"Дерево+лакове покриття",                                   q_low:13900, v_spread:0.0151, psi_ud:0.0225, smoke_capacity:64.1,  o2_consumption:-1.191, co2_emission:0.724,   co_emission:0.0205, hcl_emission:0.0005},
+            {id:18, name:"Тканини (вовна+нейлон)",                                   q_low:23300, v_spread:0.0835, psi_ud:0.013,  smoke_capacity:129,   o2_consumption:-3.698, co2_emission:0.467,   co_emission:0.0145, hcl_emission:0.0},
+            {id:19, name:"ДВП (деревно-волокнисті плити)",                           q_low:18100, v_spread:0.0405, psi_ud:0.0143, smoke_capacity:130,   o2_consumption:-1.15,  co2_emission:0.686,   co_emission:0.0215, hcl_emission:0.0},
+            {id:20, name:"Папір у рулонах (склад)",                                  q_low:15100, v_spread:0.005,  psi_ud:0.008,  smoke_capacity:41,    o2_consumption:-1.158, co2_emission:0.6635,  co_emission:0.01077,hcl_emission:0.0}
+        ];
+
         let fireData = [];
         let rooms = [];
         let roomIdCounter = 1;
         let currentT = 120;
 
         async function init() {
-            try {
-                const res = await fetch('/api/fire-loads');
-                fireData = await res.json();
-                const sel = document.getElementById('matSelect');
-                if (fireData.length > 0)
-                    sel.innerHTML = fireData.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
-            } catch(e) { console.error(e); }
+            fireData = FIRE_LOADS_STATIC;
+            const sel = document.getElementById('matSelect');
+            sel.innerHTML = fireData.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
             addRoom('fire');
             addRoom('adjacent');
         }
